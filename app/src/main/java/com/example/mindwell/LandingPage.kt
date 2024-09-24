@@ -1,10 +1,15 @@
 package com.example.mindwell
 
+import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+
+private val handler = Handler(Looper.getMainLooper())
 
 class LandingPage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,5 +21,11 @@ class LandingPage : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+
+        handler.postDelayed({
+            startActivity(Intent(this, LoginSignupPage::class.java))
+            finish()
+        }, 2500L)
+
     }
 }
