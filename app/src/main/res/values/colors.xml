@@ -5,4 +5,5 @@
     <color name="green_button_color">#7ED957</color>
     <color name="navbar_grey_color">#E7E7E7</color>
     <color name="navbar_green_color">#52DE15</color>
+    <color name="red">#D91111</color>
 </resources>
