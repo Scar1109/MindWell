@@ -1,20 +1,49 @@
 package com.example.mindwell
 
+import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+import com.example.mindwell.databinding.ActivityHomePageBinding
 
 class HomePage : AppCompatActivity() {
+
+    private lateinit var binding: ActivityHomePageBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContentView(R.layout.activity_home_page)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding = ActivityHomePageBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
+        // Handle navigation bar click events
+        binding.navHome.setOnClickListener {
+            // Already on the home page, show a message
+            Toast.makeText(this, "You are already on Home", Toast.LENGTH_SHORT).show()
+        }
+
+        binding.navTherapy.setOnClickListener {
+            startActivity(Intent(this, TherapyPage::class.java))
+        }
+
+        binding.navCommunity.setOnClickListener {
+            startActivity(Intent(this, CommunityPage::class.java))
+        }
+
+        binding.navMood.setOnClickListener {
+            startActivity(Intent(this, MoodPage::class.java))
+        }
+
+        binding.navProfile.setOnClickListener {
+            startActivity(Intent(this, ProfilePage::class.java))
+        }
+
+        // Handle buttons for "Mental Health" and "Mental Health Tips"
+        binding.btnMentalHealth.setOnClickListener {
+            startActivity(Intent(this, MentalHealthDetails::class.java))
+        }
+
+        binding.btnMentalHealthTips.setOnClickListener {
+            startActivity(Intent(this, MentalHealthTips::class.java))
         }
     }
 }

@@ -1,11 +1,139 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".HomePage">
 
+    <!-- Title logo -->
 
+    <!-- Navigation Pane (Horizontal layout for buttons) -->
+
+    <ImageView
+        android:id="@+id/tv_logo"
+        android:layout_width="236dp"
+        android:layout_height="65dp"
+        android:layout_marginTop="65dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/short_logo" />
+
+    <LinearLayout
+        android:id="@+id/nav_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="10dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_logo">
+
+        <TextView
+            android:id="@+id/nav_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:text="Home"
+            android:textColor="@color/green_button_color"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/nav_therapy"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:text="Therapy"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/nav_community"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:text="Community"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/nav_mood"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:text="Mood"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/nav_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="14dp"
+            android:text="Profile"
+            android:textColor="@color/black" />
+    </LinearLayout>
+
+    <!-- Motivational Quote -->
+    <TextView
+        android:id="@+id/tv_quote"
+        android:layout_width="366dp"
+        android:layout_height="138dp"
+        android:layout_marginTop="20dp"
+        android:gravity="center"
+        android:text="YOUR MENTAL HEALTH IS EVERYTHING,\nPRIORITIZE IT.\nMAKE THE TIME LIKE YOUR LIFE DEPENDS ON IT,\nBECAUSE IT DOES.\n-MEL ROBBINS-"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/nav_bar" />
+
+    <!-- Mental Wellness Image -->
+    <ImageView
+        android:id="@+id/img_mental_wellness"
+        android:layout_width="251dp"
+        android:layout_height="232dp"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/mental_wellness_image"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_quote" />
+
+    <!-- Mental Health Button -->
+    <Button
+        android:id="@+id/btn_mental_health"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:backgroundTint="@color/green_button_color"
+        android:padding="16dp"
+        android:text="Mental Health"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_mental_wellness" />
+
+    <!-- Mental Health Tips Button -->
+    <Button
+        android:id="@+id/btn_mental_health_tips"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:backgroundTint="@color/green_button_color"
+        android:drawableEnd="@drawable/arrow_icon"
+        android:padding="16dp"
+        android:text="Mental Health Tips"
+        android:textColor="@color/white"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btn_mental_health" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
