@@ -52,10 +52,14 @@ dependencies {
     // Firebase Authentication
     implementation("com.google.firebase:firebase-auth-ktx")
 
+    // Firebase Firestore KTX (for Kotlin)
+    implementation("com.google.firebase:firebase-firestore-ktx:24.0.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+
 
 // Apply the Google services plugin
 apply(plugin = "com.google.gms.google-services")

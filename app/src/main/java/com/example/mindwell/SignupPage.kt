@@ -2,84 +2,93 @@ package com.example.mindwell
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Patterns
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mindwell.databinding.ActivitySignupPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class SignupPage : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
+    private lateinit var db: FirebaseFirestore
     private lateinit var binding: ActivitySignupPageBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         binding = ActivitySignupPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and Firestore
         auth = FirebaseAuth.getInstance()
+        db = FirebaseFirestore.getInstance()
 
-        // Back button to close the activity
-        binding.backBtn.setOnClickListener {
-            finish()
-        }
-
-        // Signup button click listener
+        // Handle Signup button click
         binding.btnSignup.setOnClickListener {
             val email = binding.mailInput.text.toString().trim()
             val password = binding.pwdInput.text.toString().trim()
+            val username = binding.usernameInput.text.toString().trim() // Get the username
 
-            // Validate input fields
-            if (validateInput(email, password)) {
-                registerUser(email, password)
+            if (validateInput(email, password, username)) {
+                registerUser(email, password, username)
             }
+        }
+
+        binding.backBtn.setOnClickListener {
+            finish()
         }
     }
 
     // Validate input fields before sign-up
-    private fun validateInput(email: String, password: String): Boolean {
-        // Check if email is empty
+    private fun validateInput(email: String, password: String, username: String): Boolean {
         if (email.isEmpty()) {
             binding.mailInput.error = "Email is required"
             binding.mailInput.requestFocus()
             return false
         }
 
-        // Check if email format is valid
-        if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            binding.mailInput.error = "Please enter a valid email"
-            binding.mailInput.requestFocus()
-            return false
-        }
-
-        // Check if password is empty
-        if (password.isEmpty()) {
-            binding.pwdInput.error = "Password is required"
-            binding.pwdInput.requestFocus()
-            return false
-        }
-
-        // Check if password is at least 6 characters long (Firebase requirement)
-        if (password.length < 6) {
+        if (password.isEmpty() || password.length < 6) {
             binding.pwdInput.error = "Password must be at least 6 characters"
             binding.pwdInput.requestFocus()
             return false
         }
 
-        // Additional password complexity checks can be added here
+        if (username.isEmpty()) {
+            binding.usernameInput.error = "Username is required"
+            binding.usernameInput.requestFocus()
+            return false
+        }
+
         return true
     }
 
-    // Register the user with Firebase
-    private fun registerUser(email: String, password: String) {
+    // Register the user with Firebase Auth and store username in Firestore
+    private fun registerUser(email: String, password: String, username: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
-                    startActivity(Intent(this, HomePage::class.java))
-                    finish()
+                    val user = auth.currentUser
+                    if (user != null) {
+                        val uid = user.uid
+
+                        // Save user data to Firestore
+                        val userData = hashMapOf(
+                            "email" to email,
+                            "username" to username
+                        )
+
+                        db.collection("users").document(uid).set(userData)
+                            .addOnSuccessListener {
+                                Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
+                                startActivity(Intent(this, HomePage::class.java))
+                                finish()
+                            }
+                            .addOnFailureListener {
+                                Toast.makeText(this, "Failed to save user data: ${it.message}", Toast.LENGTH_SHORT).show()
+                            }
+                    }
                 } else {
                     Toast.makeText(this, "Sign-up failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
