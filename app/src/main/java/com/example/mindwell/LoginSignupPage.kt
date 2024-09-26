@@ -2,6 +2,7 @@ package com.example.mindwell
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -10,13 +11,10 @@ import com.google.firebase.auth.FirebaseAuth
 
 class LoginSignupPage : AppCompatActivity() {
     private lateinit var binding: ActivityLoginSignupPageBinding
-    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
+        enableEdgeToEdge()
 
         // Inflate the layout using ViewBinding
         binding = ActivityLoginSignupPageBinding.inflate(layoutInflater)

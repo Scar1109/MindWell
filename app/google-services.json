@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "238406753630",
+    "project_id": "mindwell-938a0",
+    "storage_bucket": "mindwell-938a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:238406753630:android:4f35c25ac191e6945f83cf",
+        "android_client_info": {
+          "package_name": "com.example.mindwell"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC5XqfESb-l9Rxj7-bTcNyj9T76mgbAnOA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
