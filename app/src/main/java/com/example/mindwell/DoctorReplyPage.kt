@@ -7,44 +7,43 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.mindwell.databinding.ActivityDoctorChatPageBinding
+import com.example.mindwell.databinding.ActivityDoctorReplyPageBinding
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 
-class DoctorChatPage : AppCompatActivity() {
+class DoctorReplyPage : AppCompatActivity() {
 
-    private lateinit var binding: ActivityDoctorChatPageBinding
+    private lateinit var binding: ActivityDoctorReplyPageBinding
     private lateinit var chatAdapter: ChatAdapter
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
-    private lateinit var doctorName: String
-    private lateinit var doctorUID: String // Store doctor UID
     private lateinit var userId: String
+    private lateinit var doctorId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        binding = ActivityDoctorChatPageBinding.inflate(layoutInflater)
+        binding = ActivityDoctorReplyPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         // Initialize Firebase
         db = FirebaseFirestore.getInstance()
         auth = FirebaseAuth.getInstance()
 
-        // Get doctor name and UID passed from previous activity
-        doctorName = intent.getStringExtra("doctorName") ?: "Doctor"
-        doctorUID = intent.getStringExtra("doctorUID") ?: "" // Get the doctor's UID
-        userId = auth.currentUser?.uid ?: ""
+        // Get userId from intent and doctorId from authentication
+        userId = intent.getStringExtra("userId") ?: ""
+        doctorId = auth.currentUser?.uid ?: ""
 
-        binding.tvChatWithDoctor.text = "Dr. $doctorName"
+        // Set the chat header with user ID (could be username if stored)
+        binding.tvChatWithUser.text = "Chat with $userId"
 
-        // Set up RecyclerView for chat messages
-        chatAdapter = ChatAdapter(userId) // Pass the userId to adapter
+        // Set up RecyclerView
+        chatAdapter = ChatAdapter(doctorId) // Pass the doctorId for message alignment
         binding.recyclerViewChat.layoutManager = LinearLayoutManager(this)
         binding.recyclerViewChat.adapter = chatAdapter
 
-        // Load chat messages from Firestore
+        // Load messages from Firestore
         loadMessages()
 
         // Handle Send Button click
@@ -57,12 +56,18 @@ class DoctorChatPage : AppCompatActivity() {
                 Toast.makeText(this, "Enter a message", Toast.LENGTH_SHORT).show()
             }
         }
+
+        // Handle Back Button click
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
     }
 
-    // Load chat messages from Firestore in real-time
+    // Load messages from Firestore in real-time
     private fun loadMessages() {
+        val chatId = "$userId-$doctorId"
         db.collection("chats")
-            .document("$userId-$doctorUID") // Use doctorUID for unique chat identifier
+            .document(chatId)
             .collection("messages")
             .orderBy("timestamp", Query.Direction.ASCENDING)
             .addSnapshotListener { snapshots, e ->
@@ -86,43 +91,14 @@ class DoctorChatPage : AppCompatActivity() {
 
     // Send message to Firestore
     private fun sendMessage(messageText: String) {
-        val message: HashMap<String, Any> = hashMapOf(
+        val message = hashMapOf(
             "text" to messageText,
-            "sender" to userId,
+            "sender" to doctorId,
             "timestamp" to System.currentTimeMillis()
         )
 
-        // Define a document for the chat (User-Doctor unique identifier)
-        val chatId = "$userId-$doctorUID" // Use doctorUID here
+        val chatId = "$userId-$doctorId"
 
-        // Add a new chat document if it doesn't exist
-        db.collection("chats").document(chatId).get()
-            .addOnSuccessListener { document ->
-                if (!document.exists()) {
-                    // Create a new chat if it doesn't exist
-                    val participants: HashMap<String, Any> = hashMapOf(
-                        "participants" to listOf(userId, doctorUID) // Save correct doctorUID here
-                    )
-
-                    db.collection("chats").document(chatId).set(participants)
-                        .addOnSuccessListener {
-                            // Once chat document is created, send the message
-                            addMessageToChat(chatId, message)
-                        }
-                        .addOnFailureListener {
-                            Toast.makeText(this, "Failed to create chat: ${it.message}", Toast.LENGTH_SHORT).show()
-                        }
-                } else {
-                    // If chat exists, send the message
-                    addMessageToChat(chatId, message)
-                }
-            }
-            .addOnFailureListener {
-                Toast.makeText(this, "Failed to check chat existence: ${it.message}", Toast.LENGTH_SHORT).show()
-            }
-    }
-
-    private fun addMessageToChat(chatId: String, message: Map<String, Any>) {
         db.collection("chats").document(chatId).collection("messages")
             .add(message)
             .addOnSuccessListener {

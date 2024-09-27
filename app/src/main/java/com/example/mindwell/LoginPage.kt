@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mindwell.databinding.ActivityLoginPageBinding
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 
 class LoginPage : AppCompatActivity() {
 
@@ -43,13 +44,28 @@ class LoginPage : AppCompatActivity() {
         auth.signInWithEmailAndPassword(email, password)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
-                    // Navigate to home screen
-                    startActivity(Intent(this, HomePage::class.java))
-                    finish()
+                    val userId = auth.currentUser?.uid ?: return@addOnCompleteListener
+
+                    // Check the user type from Firestore
+                    FirebaseFirestore.getInstance().collection("users")
+                        .document(userId).get()
+                        .addOnSuccessListener { document ->
+                            if (document != null && document.exists()) {
+                                val userType = document.getString("userType") ?: "User"
+                                if (userType == "Doctor") {
+                                    // Redirect to DoctorReplyPage if the user is a doctor
+                                    startActivity(Intent(this, DoctorUserListPage::class.java))
+                                } else {
+                                    // Redirect to HomePage if the user is not a doctor
+                                    startActivity(Intent(this, HomePage::class.java))
+                                }
+                                finish() // Close the LoginPage
+                            }
+                        }
                 } else {
                     Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
+
 }

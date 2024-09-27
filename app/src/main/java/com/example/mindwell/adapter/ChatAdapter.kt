@@ -1,49 +1,64 @@
-package com.example.mindwell
-
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.example.mindwell.databinding.ItemChatMessageDoctorBinding
+import com.example.mindwell.databinding.ItemChatMessageUserBinding
 
-data class ChatMessage(
-    val text: String,
-    val sender: String,
-    val timestamp: Long
-)
+class ChatAdapter(private val currentUserId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-class ChatAdapter : ListAdapter<ChatMessage, ChatAdapter.ChatViewHolder>(DIFF_CALLBACK) {
+    private val chatMessages = mutableListOf<ChatMessage>()
+
+    fun submitList(messages: List<ChatMessage>) {
+        chatMessages.clear()
+        chatMessages.addAll(messages)
+        notifyDataSetChanged()
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return if (chatMessages[position].sender == currentUserId) {
+            VIEW_TYPE_USER
+        } else {
+            VIEW_TYPE_DOCTOR
+        }
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return if (viewType == VIEW_TYPE_USER) {
+            val binding = ItemChatMessageUserBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            UserMessageViewHolder(binding)
+        } else {
+            val binding = ItemChatMessageDoctorBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            DoctorMessageViewHolder(binding)
+        }
+    }
+
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+        val message = chatMessages[position]
+        if (holder is UserMessageViewHolder) {
+            holder.bind(message)
+        } else if (holder is DoctorMessageViewHolder) {
+            holder.bind(message)
+        }
+    }
+
+    override fun getItemCount(): Int = chatMessages.size
+
+    class UserMessageViewHolder(private val binding: ItemChatMessageUserBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(message: ChatMessage) {
+            binding.tvMessageUser.text = message.text
+        }
+    }
+
+    class DoctorMessageViewHolder(private val binding: ItemChatMessageDoctorBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+        fun bind(message: ChatMessage) {
+            binding.tvMessageDoctor.text = message.text
+        }
+    }
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<ChatMessage>() {
-            override fun areItemsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-                return oldItem.timestamp == newItem.timestamp
-            }
-
-            override fun areContentsTheSame(oldItem: ChatMessage, newItem: ChatMessage): Boolean {
-                return oldItem == newItem
-            }
-        }
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChatViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.item_chat_message, parent, false)
-        return ChatViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ChatViewHolder, position: Int) {
-        val chatMessage = getItem(position)
-        holder.bind(chatMessage)
-    }
-
-    inner class ChatViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val messageText: TextView = itemView.findViewById(R.id.message_text)
-
-        fun bind(chatMessage: ChatMessage) {
-            messageText.text = chatMessage.text
-        }
+        const val VIEW_TYPE_USER = 1
+        const val VIEW_TYPE_DOCTOR = 2
     }
 }

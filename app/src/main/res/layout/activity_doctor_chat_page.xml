@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".DoctorChatPage">
 
     <!-- Back button -->
@@ -14,9 +15,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
+        android:src="@drawable/baseline_arrow_back_24"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/baseline_arrow_back_24" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Doctor Name -->
     <TextView
@@ -40,7 +41,7 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewChat"
         android:layout_width="409dp"
-        android:layout_height="698dp"
+        android:layout_height="680dp"
         android:layout_marginTop="16dp"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,11 +52,14 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:layout_marginBottom="10dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewChat">
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewChat"
+        app:layout_constraintVertical_bias="1.0">
 
         <EditText
             android:id="@+id/etMessage"

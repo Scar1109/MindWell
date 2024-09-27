@@ -16,6 +16,12 @@
         android:theme="@style/Theme.MindWell"
         tools:targetApi="31">
         <activity
+            android:name=".DoctorUserListPage"
+            android:exported="false" />
+        <activity
+            android:name=".DoctorReplyPage"
+            android:exported="false" />
+        <activity
             android:name=".DoctorChatPage"
             android:exported="false" />
         <activity
