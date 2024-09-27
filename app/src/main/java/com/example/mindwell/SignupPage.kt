@@ -76,17 +76,20 @@ class SignupPage : AppCompatActivity() {
                         // Save user data to Firestore
                         val userData = hashMapOf(
                             "email" to email,
-                            "username" to username
+                            "username" to username,
+                            "userType" to "User"
                         )
 
                         db.collection("users").document(uid).set(userData)
-                            .addOnSuccessListener {
-                                Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
-                                startActivity(Intent(this, HomePage::class.java))
-                                finish()
-                            }
-                            .addOnFailureListener {
-                                Toast.makeText(this, "Failed to save user data: ${it.message}", Toast.LENGTH_SHORT).show()
+                            .addOnCompleteListener { firestoreTask ->
+                                if (firestoreTask.isSuccessful) {
+                                    Toast.makeText(this, "Sign-up successful", Toast.LENGTH_SHORT).show()
+                                    // Navigate to home page
+                                    startActivity(Intent(this, HomePage::class.java))
+                                    finish()
+                                } else {
+                                    Toast.makeText(this, "Failed to save user data: ${firestoreTask.exception?.message}", Toast.LENGTH_SHORT).show()
+                                }
                             }
                     }
                 } else {
