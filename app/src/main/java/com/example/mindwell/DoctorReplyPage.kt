@@ -19,6 +19,7 @@ class DoctorReplyPage : AppCompatActivity() {
     private lateinit var db: FirebaseFirestore
     private lateinit var auth: FirebaseAuth
     private lateinit var userId: String
+    private lateinit var userName: String
     private lateinit var doctorId: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,10 +34,11 @@ class DoctorReplyPage : AppCompatActivity() {
 
         // Get userId from intent and doctorId from authentication
         userId = intent.getStringExtra("userId") ?: ""
+        userName = intent.getStringExtra("username") ?: ""
         doctorId = auth.currentUser?.uid ?: ""
 
         // Set the chat header with user ID (could be username if stored)
-        binding.tvChatWithUser.text = "Chat with $userId"
+        binding.tvChatWithUser.text = "Chat with $userName"
 
         // Set up RecyclerView
         chatAdapter = ChatAdapter(doctorId) // Pass the doctorId for message alignment

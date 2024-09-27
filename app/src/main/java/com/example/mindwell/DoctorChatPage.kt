@@ -47,6 +47,10 @@ class DoctorChatPage : AppCompatActivity() {
         // Load chat messages from Firestore
         loadMessages()
 
+        binding.backBtn.setOnClickListener {
+            finish()
+        }
+
         // Handle Send Button click
         binding.btnSend.setOnClickListener {
             val messageText = binding.etMessage.text.toString().trim()

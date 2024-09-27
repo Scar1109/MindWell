@@ -34,6 +34,13 @@ class DoctorUserListPage : AppCompatActivity() {
         }
         binding.recyclerViewUsers.adapter = userListAdapter
 
+        // Handle Logout Button
+        binding.btnLogout.setOnClickListener {
+            auth.signOut()
+            startActivity(Intent(this, LoginSignupPage::class.java))
+            finish()
+        }
+
         // Load user list
         loadUserList()
 
